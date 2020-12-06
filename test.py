@@ -10,8 +10,6 @@ import dataset
 import model
 import viz
 
-# print("torch.cuda.is_available: " + str(torch.cuda.is_available()))
-
 def test():
 
     batch_size = 10
