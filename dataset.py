@@ -68,9 +68,15 @@ def load_by_name(batch_size = 1):
 
 def load_by_name_belly(batch_size = 1): 
 
+    torch.manual_seed(17)
+
     data_transforms = transforms.Compose([
-        transforms.Resize(400),
-        transforms.CenterCrop([400, 200]),
+        transforms.ColorJitter((0.4, 1.7), 0.2, 0.4, 0.04),
+        
+        transforms.RandomAffine(degrees=20, translate=(0.1, 0.1), scale=(0.95, 1.05), shear=5),
+        
+        transforms.Resize([400, 200]),
+        # transforms.CenterCrop([400, 200]),
         transforms.ToTensor(),
         transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
     ])
@@ -98,12 +104,18 @@ def load_by_name_belly(batch_size = 1):
 
 
 if __name__ == "__main__":
-  datasets, dataloaders, dataset = load_by_name_belly(10)
+  datasets, dataloaders, dataset = load_by_name_belly(16)
   
-  dataiter = iter(dataloaders['train'])
-  images, labels = dataiter.next()
+  images = []
+  for i in range(8):
+    loader_iter = iter(torch.utils.data.DataLoader(dataset, batch_size=16))
+    # loader_iter = iter(dataloaders['test'])
+    [imgs, labels] = loader_iter.next()
+    images.extend(imgs)
 
+  # print labels
+#   print(' '.join('%5s' % dataset.classes[labels[j]] for j in range(10)))
   # show images
   viz.imshow(torchvision.utils.make_grid(images))
-  # print labels
-  print(' '.join('%5s' % dataset.classes[labels[j]] for j in range(10)))
+  
+  
