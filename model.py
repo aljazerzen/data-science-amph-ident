@@ -23,6 +23,18 @@ class AmphiOrderNet(nn.Module):
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
         return x
+    def filepath(self):
+        return './amphi_order_net.pth'
+
+    def save(self):
+        torch.save(self.state_dict(), self.filepath())
+
+    def load(self):
+        if os.path.isfile(self.filepath()):
+            self.load_state_dict(torch.load(self.filepath()))
+        else:
+            print("no saved net found, starting from scratch")
+
 
 
 class AmphiNameNet(nn.Module):
@@ -43,7 +55,7 @@ class AmphiNameNet(nn.Module):
         return x
 
     def filepath(self):
-        return './amphi_name_net.pht'
+        return './amphi_name_net.pth'
 
     def save(self):
         torch.save(self.state_dict(), self.filepath())
@@ -51,3 +63,5 @@ class AmphiNameNet(nn.Module):
     def load(self):
         if os.path.isfile(self.filepath()):
             self.load_state_dict(torch.load(self.filepath()))
+        else:
+            print("no saved net found, starting from scratch")

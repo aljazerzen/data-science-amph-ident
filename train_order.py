@@ -9,15 +9,14 @@ def train():
 
     # load
     net = model.AmphiOrderNet()
-    if os.path.isfile(model.PATH):
-        net.load_state_dict(torch.load(model.PATH))
+    net.load()
     net.to(device)
 
     # Define a Loss function and optimizer
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
-    datasets, dataloaders, dataset_all = dataset.load()
+    datasets, dataloaders, dataset_all = dataset.load_by_order()
 
     # train
     print_per = 50

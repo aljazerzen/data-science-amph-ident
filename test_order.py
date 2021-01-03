@@ -9,18 +9,25 @@ import numpy as np
 import dataset
 import model
 import viz
+import math
+
 
 def test():
 
     batch_size = 10
 
-    datasets, dataloaders, ds = dataset.load(batch_size)
-
-    # print images
+    datasets, dataloaders, ds = dataset.load_by_order(batch_size)
 
     net = model.AmphiOrderNet()
-    net.load_state_dict(torch.load(model.PATH))
+    net.load()
 
+    print('train dataset results:')
+    evaluate(net, ds, dataloaders['train'])
+
+    print('test dataset results:')
+    evaluate(net, ds, dataloaders['test'])
+
+def evaluate(net, ds, dataloader):
     wrong = {
         'label': [],
         'predicted': [],
@@ -30,7 +37,7 @@ def test():
     correct = 0
     total = 0
     with torch.no_grad():
-        for images, labels in dataloaders['test']:
+        for images, labels in dataloader:
             outputs = net(images)
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
@@ -41,14 +48,17 @@ def test():
                 wrong['predicted'].append(predicted[i])
                 wrong['image'].append(images[i])
 
-    print(f'Accuracy: {100 * correct / total}% ({correct}/{total})')
+    print(f' Accuracy: {math.floor(1000 * correct / total) / 10}% ({correct}/{total})')
 
     w = len(wrong['label'])
     if w > 0:
-        print(f'Wrong ({w}):')
-        print(' labels:    ', ' '.join('%5s' % ds.classes[wrong['label'][j]] for j in range(w)))
-        print(' predicted: ', ' '.join('%5s' % ds.classes[wrong['predicted'][j]] for j in range(w)))
-        viz.imshow(torchvision.utils.make_grid(wrong['image']))
+        print(f' Wrong ({w}):')
+        # print('       Label  Predicted')
+        # print(' ----------------------')
+        # for i in range(min(20, len(wrong['label']))):
+        #     print('  %10s %10s' % (ds.classes[wrong['label'][i]], ds.classes[wrong['predicted'][i]]))
+        
+        # viz.imshow(torchvision.utils.make_grid(wrong['image']))
 
 
 if __name__ == '__main__':
