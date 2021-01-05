@@ -66,20 +66,23 @@ def load_by_name(batch_size = 1):
 
     return subsets, dataloaders, dataset
 
-def load_by_name_belly(batch_size = 1): 
-
+def load_by_name_belly(batch_size = 1, augementation = False): 
     torch.manual_seed(17)
 
-    data_transforms = transforms.Compose([
-        transforms.ColorJitter((0.4, 1.7), 0.2, 0.4, 0.04),
-        
-        transforms.RandomAffine(degrees=20, translate=(0.1, 0.1), scale=(0.95, 1.05), shear=5),
-        
-        transforms.Resize([400, 200]),
-        # transforms.CenterCrop([400, 200]),
+    data_transforms = []
+    if augementation:
+        data_transforms.extend([
+            transforms.ColorJitter((0.4, 1.7), 0.2, 0.4, 0.04),
+            
+            transforms.RandomAffine(degrees=20, translate=(0.1, 0.1), scale=(0.95, 1.05), shear=5),
+        ])
+
+    data_transforms.extend([
+        transforms.Resize([256, 256]),
         transforms.ToTensor(),
         transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
     ])
+    data_transforms = transforms.Compose(data_transforms)
 
     dataset = torchvision.datasets.ImageFolder('./Amphibious dataset/by_name_belly', data_transforms)
     train = math.floor(len(dataset) * 0.7)
