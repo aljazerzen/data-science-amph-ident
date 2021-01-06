@@ -100,8 +100,13 @@ def load_by_name_belly(batch_size = 1, augementation = False):
         ) for x in ['train', 'test']
     }
 
-    a = f'amphibious dataset (size={len(dataset)}, classes={len(dataset.classes)}, train={len(subsets["train"])}, test={len(subsets["test"])})'
-    print(a)
+    augmented = ', augmented' if augementation else ''
+    print(f'amphibious dataset ('+
+        f'size={len(dataset)}, ' + 
+        f'classes={len(dataset.classes)}, ' + 
+        f'train={len(subsets["train"])}, ' + 
+        f'test={len(subsets["test"])}{augmented})'
+    )
 
     return subsets, dataloaders, dataset
 

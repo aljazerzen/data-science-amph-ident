@@ -29,6 +29,7 @@ def test():
 def evaluate(net, device, ds, dataloader):
     
     ranks = []
+    correct = []
     with torch.no_grad():
         for inputs, labels in dataloader:
             inputs = inputs.to(device)
@@ -39,6 +40,9 @@ def evaluate(net, device, ds, dataloader):
                 label = labels[i]
                 output = outputs[i, label].numpy()
                 rank = np.sum((outputs[i,:].numpy() >= output))
+                
+                if rank == 0:
+                    correct.append(label)
                 ranks.append(rank)
     
     ranks = np.array(ranks)
