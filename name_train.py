@@ -18,9 +18,7 @@ def train(epochs = 100):
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(net.parameters(), lr=0.01, momentum=0.9)
 
-    datasets, dataloaders, dataset_all = dataset.load_by_name_belly(8, augementation=True)
-
-    _, dataloaders_no_aug, _ = dataset.load_by_name_belly(batch_size=10)
+    (ds_train, loader_train), (ds_test, loader_test) = dataset.load_by_name(8, augmentation=True)
 
     # train
     for epoch in range(epochs):  # loop over the dataset multiple times
@@ -29,13 +27,13 @@ def train(epochs = 100):
         if epoch % 10 == 0:
             net.save()
 
-            rank_freq_train = name_test.evaluate(net, device, None, dataloaders_no_aug['train'])
-            rank_freq_test = name_test.evaluate(net, device, None, dataloaders_no_aug['test'])
+            rank_freq_train = name_test.evaluate(net, device, loader_train)
+            rank_freq_test = name_test.evaluate(net, device, loader_test)
 
             print(rank_freq_train, rank_freq_test)
 
         losses = []
-        for i, (inputs, labels) in enumerate(dataloaders['train'], 0):
+        for i, (inputs, labels) in enumerate(loader_train, 0):
             inputs, labels = inputs.to(device), labels.to(device)
 
             # zero the parameter gradients

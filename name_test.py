@@ -14,19 +14,19 @@ import viz
 def test():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-    datasets, dataloaders, ds = dataset.load_by_name_belly(batch_size=10)
+    train, test = dataset.load_by_name(batch_size=10)
 
     net = model.AmphiNameNet()
     net.load()
     net.to(device)
 
     print('train dataset results:')
-    print_summary(evaluate(net, device, ds, dataloaders['train']))
+    print_summary(evaluate(net, device, train[1]))
 
     print('test dataset results:')
-    print_summary(evaluate(net, device, ds, dataloaders['test']))
+    print_summary(evaluate(net, device, test[1]))
 
-def evaluate(net, device, ds, dataloader):
+def evaluate(net, device, dataloader):
     
     ranks = []
     correct = []

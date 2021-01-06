@@ -85,7 +85,7 @@ class AmphiNameNet(nn.Module):
         self.bn13 = torch.nn.BatchNorm2d(432)
         # self.scale13 = ScaleLayer(32)
 
-        self.fc1 = nn.Linear(108 * 32 * 32, 140)
+        self.fc1 = nn.Linear(108 * 32 * 32, 185)
         
 
     def forward(self, x):
