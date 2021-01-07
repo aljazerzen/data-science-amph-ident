@@ -20,11 +20,13 @@ def test():
     net.load()
     net.to(device)
 
+    class_count = len(train[0].classes)
+
     print('train dataset results:')
-    print_summary(evaluate(net, device, train[1]))
+    print_summary(evaluate(net, device, train[1]), class_count)
 
     print('test dataset results:')
-    print_summary(evaluate(net, device, test[1]))
+    print_summary(evaluate(net, device, test[1]), class_count)
 
 def evaluate(net, device, dataloader):
     
@@ -52,13 +54,16 @@ def evaluate(net, device, dataloader):
         np.sum(ranks <= 2),
         np.sum(ranks <= 5),
         np.sum(ranks <= 10),
-    ]
+    ], ranks
 
-def print_summary(rank_freqs):
-    print(f'rank1 : {round(100 * rank_freqs[1] / rank_freqs[0], 2)}%')
-    print(f'rank2 : {round(100 * rank_freqs[2] / rank_freqs[0], 2)}%')
-    print(f'rank5 : {round(100 * rank_freqs[3] / rank_freqs[0], 2)}%')
-    print(f'rank10: {round(100 * rank_freqs[4] / rank_freqs[0], 2)}%')
+def print_summary(res, class_count):
+    freqs, ranks = res
+
+    print('rank,count,frequency')
+    for rank in np.arange(1, class_count):
+        count = np.sum(ranks <= rank)
+        freq = count / class_count
+        print(f'{rank},{count},{freq}')
 
 if __name__ == '__main__':
     test()

@@ -1,3 +1,4 @@
 Amphibian dataset
 venv/
 __pycache__/
+*.pth

@@ -49,6 +49,7 @@ class AmphiNameNet(nn.Module):
         # self.scale5 = ScaleLayer(128)
 
         self.pool = nn.MaxPool2d(2, 2)
+        self.dropout = nn.Dropout(0)
 
         
         self.conv6 = nn.Conv2d(192, 192, kernel_size=3, padding=1)
@@ -90,26 +91,26 @@ class AmphiNameNet(nn.Module):
 
     def forward(self, x):
         
-        x = F.relu(self.bn1(self.conv1(x)))
+        x = F.relu(self.dropout(self.bn1(self.conv1(x))))
 
-        x = F.relu(self.bn2(self.conv2(x)))
-        x = F.relu(self.bn3(self.conv3(x)))
-        x = F.relu(self.bn4(self.conv4(x)))
-        x = F.relu(self.bn5(self.conv5(x)))
-        x = self.pool(x)
+        x = F.relu(self.dropout(self.bn2(self.conv2(x))))
+        x = F.relu(self.dropout(self.bn3(self.conv3(x))))
+        x = F.relu(self.dropout(self.bn4(self.conv4(x))))
+        x = F.relu(self.dropout(self.bn5(self.conv5(x))))
+        x = self.dropout(self.pool(x))
         
-        x = F.relu(self.bn6(self.conv6(x)))
-        x = F.relu(self.bn7(self.conv7(x)))
-        x = F.relu(self.bn8(self.conv8(x)))
-        x = F.relu(self.bn9(self.conv9(x)))
+        x = F.relu(self.dropout(self.bn6(self.conv6(x))))
+        x = F.relu(self.dropout(self.bn7(self.conv7(x))))
+        x = F.relu(self.dropout(self.bn8(self.conv8(x))))
+        x = F.relu(self.dropout(self.bn9(self.conv9(x))))
 
-        x = F.relu(self.bn10(self.conv10(x)))
-        x = self.pool(x)
+        x = F.relu(self.dropout(self.bn10(self.conv10(x))))
+        x = self.dropout(self.pool(x))
 
-        x = F.relu(self.bn11(self.conv11(x)))
-        x = F.relu(self.bn12(self.conv12(x)))
-        x = F.relu(self.bn13(self.conv13(x)))
-        x = self.pool(x)
+        x = F.relu(self.dropout(self.bn11(self.conv11(x))))
+        x = F.relu(self.dropout(self.bn12(self.conv12(x))))
+        x = F.relu(self.dropout(self.bn13(self.conv13(x))))
+        x = self.dropout(self.pool(x))
         
         x = x.view(-1, 108 * 32 * 32)
         x = self.fc1(x)

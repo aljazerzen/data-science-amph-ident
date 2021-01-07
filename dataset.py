@@ -40,12 +40,14 @@ def load_by_order(batch_size = 1):
 def load_by_name_subset(batch_size, augmentation, is_valid_file):
     # prepare tranformations
     perturbations = [
-        transforms.ColorJitter((0.8, 1.2), 0.2, 0.4, 0.04),
-        transforms.RandomAffine(degrees=2, translate=(0.05, 0.05), scale=(0.998, 1.02), shear=1),
+        transforms.ColorJitter((0.4, 1.7), 0.2, 0.4, 0.04),
+        transforms.RandomAffine(degrees=20, translate=(0.1, 0.1), scale=(0.9, 1.1), shear=10),
+        # transforms.RandomAffine(degrees=10, translate=(0.1, 0.1), scale=(0.95, 1.05), shear=1),
     ] if augmentation else []
 
-    data_transforms = transforms.Compose(perturbations + [
+    data_transforms = transforms.Compose([
         transforms.Resize([256, 256]),
+    ] + perturbations + [
         transforms.ToTensor(),
         transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
     ])
@@ -56,7 +58,7 @@ def load_by_name_subset(batch_size, augmentation, is_valid_file):
     )
     return dataset, loader
 
-def load_by_name(batch_size = 1, augmentation = False, include_test = True): 
+def load_by_name(batch_size = 1, augmentation = False, include_test = True):
     torch.manual_seed(17)
 
     test_images = open('test-images.txt').readlines()
@@ -74,7 +76,7 @@ def load_by_name(batch_size = 1, augmentation = False, include_test = True):
             f'test_cases={len(test[0])} ({round(100 * len(test[0]) /(len(train[0]) + len(test[0])), 1)}%)', 
             f'total_cases={len(train[0]) + len(test[0])}', 
         ] if test != None else []) +
-        ['augmented'] if augmentation else []
+        (['augmented'] if augmentation else [])
     ) + ')')
 
     return train, test
