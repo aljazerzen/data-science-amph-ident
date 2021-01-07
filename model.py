@@ -122,11 +122,12 @@ class AmphiNameNet(nn.Module):
     def save(self):
         torch.save(self.state_dict(), self.filepath())
 
-    def load(self):
+    def load(self, device):
         if os.path.isfile(self.filepath()):
-            self.load_state_dict(torch.load(self.filepath()))
+            self.load_state_dict(torch.load(self.filepath(), map_location=torch.device(device)))
         else:
             print("no saved net found, starting from scratch")
+        self.to(device)
 
 
 

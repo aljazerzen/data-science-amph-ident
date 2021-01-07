@@ -17,16 +17,17 @@ def test():
     train, test = dataset.load_by_name(batch_size=10)
 
     net = model.AmphiNameNet()
-    net.load()
-    net.to(device)
-
-    class_count = len(train[0].classes)
+    net.load(device)
 
     print('train dataset results:')
-    print_summary(evaluate(net, device, train[1]), class_count)
+    rank_freq, ranks_train = evaluate(net, device, train[1])
+    print_summary(rank_freq)
 
     print('test dataset results:')
-    print_summary(evaluate(net, device, test[1]), class_count)
+    rank_freq, ranks_test = evaluate(net, device, test[1])
+    print_summary(rank_freq)
+
+    save_summary(ranks_train, ranks_test, len(train[0].classes))
 
 def evaluate(net, device, dataloader):
     
@@ -56,14 +57,23 @@ def evaluate(net, device, dataloader):
         np.sum(ranks <= 10),
     ], ranks
 
-def print_summary(res, class_count):
-    freqs, ranks = res
+def print_summary(rank_freq):
+    print(f'rank1 : {round(100 * rank_freq[1] / rank_freq[0], 2)}%')
+    print(f'rank2 : {round(100 * rank_freq[2] / rank_freq[0], 2)}%')
+    print(f'rank5 : {round(100 * rank_freq[3] / rank_freq[0], 2)}%')
+    print(f'rank10: {round(100 * rank_freq[4] / rank_freq[0], 2)}%')
 
-    print('rank,count,frequency')
+def save_summary(ranks_train, ranks_test, class_count):
+    with open('ranks.csv', 'w') as f:
+        f.write('rank,count,frequency,subset')
+        save_ranks(f, ranks_train, class_count, 'train')
+        save_ranks(f, ranks_test, class_count, 'test')
+
+def save_ranks(f, ranks, class_count, subset):
     for rank in np.arange(1, class_count):
         count = np.sum(ranks <= rank)
-        freq = count / class_count
-        print(f'{rank},{count},{freq}')
+        freq = count / len(ranks)
+        f.write(f'{rank},{count},{freq},{subset}')
 
 if __name__ == '__main__':
     test()

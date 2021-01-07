@@ -17,8 +17,7 @@ def train(epochs = 100):
 
     # load
     net = model.AmphiNameNet()
-    net.load()
-    net.to(device)
+    net.load(device)
 
     # Define a Loss function and optimizer
     criterion = torch.nn.CrossEntropyLoss()
@@ -38,8 +37,8 @@ def train(epochs = 100):
 
             print(rank_freq_train, rank_freq_test)
 
-            append_progress('rank_freqs.csv', [epoch, 'train'] + rank_freq_train)
-            append_progress('rank_freqs.csv', [epoch, 'test'] + rank_freq_test)
+            append_progress('running_ranks_freq.csv', [epoch, 'train'] + rank_freq_train)
+            append_progress('running_ranks_freq.csv', [epoch, 'test'] + rank_freq_test)
 
         losses = []
         for i, (inputs, labels) in enumerate(loader_train, 0):
