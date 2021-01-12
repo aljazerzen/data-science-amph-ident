@@ -1,11 +1,5 @@
 import torch
-import torchvision
-import torchvision.transforms as transforms
-from torch.utils.data import random_split
-
-import matplotlib.pyplot as plt
 import numpy as np
-import math
 
 import dataset
 import model
@@ -14,7 +8,7 @@ import viz
 def test():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-    train, test = dataset.load_by_name(batch_size=10)
+    train, test, ident = dataset.load_by_name(batch_size=10)
 
     net = model.AmphiNameNet()
     net.load(device)

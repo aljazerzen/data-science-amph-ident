@@ -58,32 +58,45 @@ def load_by_name_subset(batch_size, augmentation, is_valid_file):
     )
     return dataset, loader
 
-def load_by_name(batch_size = 1, augmentation = False, include_test = True):
+def load_text_file(filename):
+    lines = open(filename).readlines()
+    return list(map(lambda line: line.replace('\n', ''), lines))
+
+def load_by_name(batch_size = 1, augmentation = False, include_test = True, include_ident = False):
     torch.manual_seed(17)
 
-    test_images = open('test-images.txt').readlines()
-    test_images = list(map(lambda line: line.replace('\n', ''), test_images))
+    test_images = load_text_file('images-test.txt')
+    ident_images = load_text_file('images-ident.txt')
     is_test = lambda path: path.split('by_name/')[1] in test_images
-    is_train = lambda path: not is_test(path)
+    is_ident = lambda path: path.split('by_name/')[1] in ident_images
+    is_train = lambda path: not is_test(path) and not is_ident(path)
 
     train = load_by_name_subset(batch_size, augmentation, is_train)
     test = load_by_name_subset(batch_size, False, is_test) if include_test else None
+    ident = load_by_name_subset(batch_size, False, is_ident) if include_ident else None
+
+    total_cases = len(train[0]) +\
+        (len(test[0]) if include_test else 0) +\
+        (len(ident[0]) if include_ident else 0)
 
     print(f'amphibian dataset ('+', '.join(
         [f'classes={len(train[0].classes)}'] +
-        [f'train_cases={len(train[0])}'] +
+        [f'train_cases={len(train[0])} ({round(100 * len(train[0]) / total_cases, 1)}%)'] +
         ([
-            f'test_cases={len(test[0])} ({round(100 * len(test[0]) /(len(train[0]) + len(test[0])), 1)}%)', 
-            f'total_cases={len(train[0]) + len(test[0])}', 
+            f'test_cases={len(test[0])} ({round(100 * len(test[0]) / total_cases, 1)}%)', 
         ] if test != None else []) +
+        ([
+            f'ident_cases={len(ident[0])} ({round(100 * len(ident[0]) / total_cases, 1)}%)', 
+        ] if ident != None else []) +
+        [f'total_cases={total_cases}'] +
         (['augmented'] if augmentation else [])
     ) + ')')
 
-    return train, test
+    return train, test, ident
 
 
 if __name__ == "__main__":
-  (train_ds, train_loader), test = load_by_name(1, True)
+  (train_ds, train_loader), test, ident = load_by_name(1, True, True, True)
   
   images = []
   for i in range(8):

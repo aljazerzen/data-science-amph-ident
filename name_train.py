@@ -23,7 +23,7 @@ def train(epochs = 100):
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(net.parameters(), lr=0.01, momentum=0.9)
 
-    (ds_train, loader_train), (ds_test, loader_test) = dataset.load_by_name(16, augmentation=True)
+    (ds_train, loader_train), (ds_test, loader_test), _ident = dataset.load_by_name(16, augmentation=True)
 
     # train
     for epoch in range(epochs):  # loop over the dataset multiple times
