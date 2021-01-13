@@ -14,11 +14,11 @@ ggplot(loss, aes(x = time, y = loss_mean)) +
   ) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = which(loss_resets), alpha = 0.2) +
-  ylim(-2, 5) + xlim(1000, max(loss$time))
+  ylim(-2, 5) + xlim(0, max(loss$time))
 
 # ----------
 
-rank_freqs <- fread("running_rank_freq.csv")
+rank_freqs <- fread("running_ranks_freq.csv")
 rank_freqs[, subset := factor(subset)]
 rank_freqs[, time := 1:.N]
 
@@ -33,16 +33,15 @@ rank_freqs <- melt(rank_freqs,
 )
 rank_freqs[, frequency := count / total_cases]
 
-rank_resets[3]$label <- "dropout = 0.5"
-rank_resets[5]$label <- "dropout = 0.05"
-rank_resets[7]$label <- "increase aug."
-rank_resets[8]$label <- "increase aug."
-rank_resets[9]$label <- "decrease aug."
-rank_resets[11]$label <- "increase scale aug. (0.2)"
-rank_resets[12]$label <- "increase translation aug. (0.2)"
-rank_resets[13]$label <- "decrease aug.\ndropout = 0.1"
-rank_resets[14]$label <- "dropout = 0.5"
-rank_resets[15]$label <- "dropout = 0"
+rank_resets[1]$label <- "light augmentation"
+rank_resets[2]$label <- "heavy augmentation"
+rank_resets[3]$label <- "dropout = 0.1"
+rank_resets[4]$label <- "dropout = 0.5"
+rank_resets[5]$label <- "disable augmentation"
+rank_resets[6]$label <- "light augmentation"
+rank_resets[7]$label <- "heavy augmentation & dropout = 0.6"
+
+
 
 rank_plot <- ggplot(rank_freqs,
   aes(x = time, y = frequency, color = subset, linetype = rank)

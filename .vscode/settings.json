@@ -6,6 +6,15 @@
     "**/CVS": true,
     "**/.DS_Store": true,
     "__pycache__/**": true,
-    "venv": true    
+    "venv": true,
+    "**/*.aux": true,
+    "**/*.fdb_latexmk": true,
+    "**/*.fls": true,
+    "**/*.log": true,
+    "**/*.blg": true,
+    "**/*.bbl": true,
+    "**/*.out": true,
+    "**/*.synctex.gz": true,
+    "**/__latexindent_temp.tex": true,
   }
 }
