@@ -12,6 +12,7 @@ def test():
 
     net = model.AmphiNameNet()
     net.load(device)
+    net.disable_dropout()
 
     print('train dataset results:')
     rank_freq, ranks_train = evaluate(net, device, train[1])
@@ -67,7 +68,7 @@ def save_ranks(f, ranks, class_count, subset):
     for rank in np.arange(1, class_count):
         count = np.sum(ranks <= rank)
         freq = count / len(ranks)
-        f.write(f'{rank},{count},{freq},{subset}')
+        f.write(f'{rank},{count},{freq},{subset}\n')
 
 if __name__ == '__main__':
     test()

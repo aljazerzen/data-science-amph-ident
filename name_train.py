@@ -19,6 +19,10 @@ def train(epochs = 100):
     net = model.AmphiNameNet()
     net.load(device)
 
+    # net.modify()
+    # net.save()
+    # exit()
+
     # Define a Loss function and optimizer
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(net.parameters(), lr=0.01, momentum=0.9)
@@ -33,7 +37,9 @@ def train(epochs = 100):
             net.save()
 
             rank_freq_train, _ = name_test.evaluate(net, device, loader_train)
+            net.disable_dropout()
             rank_freq_test, _ = name_test.evaluate(net, device, loader_test)
+            net.enable_dropout()
 
             print(rank_freq_train, rank_freq_test)
 

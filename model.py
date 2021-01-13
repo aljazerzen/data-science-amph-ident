@@ -49,8 +49,6 @@ class AmphiNameNet(nn.Module):
         # self.scale5 = ScaleLayer(128)
 
         self.pool = nn.MaxPool2d(2, 2)
-        self.dropout = nn.Dropout(0)
-
         
         self.conv6 = nn.Conv2d(192, 192, kernel_size=3, padding=1)
         self.bn6 = torch.nn.BatchNorm2d(192)
@@ -87,7 +85,20 @@ class AmphiNameNet(nn.Module):
         # self.scale13 = ScaleLayer(32)
 
         self.fc1 = nn.Linear(108 * 32 * 32, 185)
+        self.enable_dropout()
+
+    def enable_dropout(self):
+        self.dropout = nn.Dropout(0)
+    
+    def disable_dropout(self):
+        self.dropout = nn.Dropout(0)
+
+    def modify(self):
+        for param in self.parameters():
+            param.requires_grad = False
         
+        self.fc1 = nn.Linear(108 * 32 * 32, 256)
+        self.fc2 = nn.Linear(256, 185)
 
     def forward(self, x):
         
@@ -113,6 +124,8 @@ class AmphiNameNet(nn.Module):
         x = self.dropout(self.pool(x))
         
         x = x.view(-1, 108 * 32 * 32)
+        # x = F.relu(self.fc1(x))
+        # x = self.fc2(x)
         x = self.fc1(x)
         return x
 
