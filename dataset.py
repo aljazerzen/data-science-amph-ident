@@ -99,14 +99,14 @@ if __name__ == "__main__":
   (train_ds, train_loader), test, ident = load_by_name(1, True, True, True)
   
   images = []
-  for i in range(8):
+  for i in range(4):
     loader_iter = iter(torch.utils.data.DataLoader(train_ds, batch_size=8))
     # loader_iter = iter(dataloaders['test'])
     [imgs, labels] = loader_iter.next()
-    images.extend(imgs)
+    images = images + list(imgs[0:3]) + list(imgs[7:8])
 
   # print labels
   # print(' '.join('%5s' % dataset.classes[labels[j]] for j in range(10)))
 
   # show images
-  viz.imshow(torchvision.utils.make_grid(images))
+  viz.imshow(torchvision.utils.make_grid(images, nrow = 4))
