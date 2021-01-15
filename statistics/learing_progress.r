@@ -1,6 +1,9 @@
 
 library(data.table)
 library(ggplot2)
+library(magrittr)
+
+setwd("../net2")
 
 loss <- fread("loss.csv")
 loss[, time := 1:.N]
@@ -16,6 +19,8 @@ ggplot(loss, aes(x = time, y = loss_mean)) +
   geom_vline(xintercept = which(loss_resets), alpha = 0.2) +
   ylim(-2, 5) + xlim(0, max(loss$time))
 
+ggsave("loss.pdf", width = 21)
+
 # ----------
 
 rank_freqs <- fread("running_ranks_freq.csv")
@@ -25,6 +30,11 @@ rank_freqs[, time := 1:.N]
 rank_resets <- shift(rank_freqs$epoch, fill = -1) > rank_freqs$epoch
 rank_resets <- rank_freqs[rank_resets]
 rank_resets[, label := ""]
+annotations <- fread("annotations.csv")
+for (i in seq_len(nrow(annotations))) {
+  annotation <- annotations[i]
+  rank_resets[annotation$index]$label <- annotation$text
+}
 
 rank_freqs <- melt(rank_freqs,
   id.vars = c("epoch", "total_cases", "subset", "time"),
@@ -33,23 +43,11 @@ rank_freqs <- melt(rank_freqs,
 )
 rank_freqs[, frequency := count / total_cases]
 
-rank_resets[1]$label <- "light augmentation"
-rank_resets[2]$label <- "heavy augmentation"
-rank_resets[3]$label <- "dropout = 0.1"
-rank_resets[4]$label <- "dropout = 0.5"
-rank_resets[5]$label <- "disable augmentation"
-rank_resets[6]$label <- "light augmentation"
-rank_resets[7]$label <- "heavy augmentation & dropout = 0.6"
+rank_freqs %>%
+  ggplot(aes(x = time * 5, y = frequency, color = subset, linetype = rank)) +
+  geom_line() + ylim(0, 1) + ylab("accuracy") + xlab("epoch") + # xlim(0, 930) +
+  geom_vline(xintercept = rank_resets$time * 5, alpha = 0.2) +
+  annotate("text", x = rank_resets$time * 5, y = 0.1,
+    label = rank_resets$label, angle = 20)
 
-
-
-rank_plot <- ggplot(rank_freqs,
-  aes(x = time, y = frequency, color = subset, linetype = rank)
-) +
-  geom_line() + ylim(0, 1) + 
-  geom_vline(xintercept = rank_resets$time, alpha = 0.2) +
-  annotate("text", x = rank_resets$time, y = 0.1,
-    label = rank_resets$label, angle = 45)
-
-rank_plot
-ggsave("figures/learning_progress_ranks.pdf", rank_plot, width = 21)
+ggsave("learning-progress-ranks.pdf", width = 8, height = 2.5)

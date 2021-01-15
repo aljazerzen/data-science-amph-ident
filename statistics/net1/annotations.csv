@@ -1,0 +1,11 @@
+index;text
+3;dropout = 0.5
+5;dropout = 0.05
+7;increase aug.
+8;increase aug.
+9;decrease aug.
+11;increase scale aug. (0.2)
+12;increase translation aug. (0.2)
+13;decrease aug.\ndropout = 0.1
+14;dropout = 0.5
+15;dropout = 0

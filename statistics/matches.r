@@ -2,7 +2,7 @@ library(data.table)
 library(ggplot2)
 library(magrittr)
 
-matches <- fread("matches.csv")
+matches <- fread("net4/matches.csv")
 
 matches[, a_subset := factor(a_subset)]
 matches[, b_subset := factor(b_subset)]
@@ -20,4 +20,3 @@ matches[a_subset == b_subset] %>%
   facet_wrap(vars(a_subset, approach), scales = "free")
 
 ggsave("figures/matches1.pdf")
-

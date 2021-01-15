@@ -6,7 +6,7 @@ files <- fread("Amphibian dataset/files.csv")
 
 ggplot(names, aes(x = count)) + geom_histogram(bins = 10, color = "black")
 
-mean(names$count)
+mean(names[count > 1]$count)
 
 names[startsWith(name, "s")][, .(new_classes = .N, new_images = sum(count))]
 

@@ -1,0 +1,8 @@
+index;text
+1;light augmentation
+2;heavy augmentation
+3;dropout = 0.1
+4;dropout = 0.5
+5;disable augmentation
+6;light augmentation
+7;heavy augmentation & dropout = 0.6

@@ -1,0 +1,13 @@
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+__latexindent_temp.tex
+
+.vscode/settings.json
