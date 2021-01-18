@@ -6,6 +6,8 @@ Python code uses Pytorch and [SimpNet](https://arxiv.org/abs/1802.06205) archite
 
 Statistics are done using R, see `statistics/` directory.
 
-We have used own dataset (~450MB), maybe I will post it somewhere. Same goes for trained models (~700MB).
+We have used own dataset (~450MB), maybe I will post it somewhere. 
+
+Pre-trained models are accessible [here](https://drive.google.com/drive/folders/17bepDCJz-dleXh1N0U6soZfJ9s7V4Ayq?usp=sharing).
 
 Report can be seen [here](./report/report.pdf).
