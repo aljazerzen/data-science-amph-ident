@@ -53,6 +53,10 @@
 %	ABSTRACT
 %----------------------------------------------------------------------------------------
 
+\Abstract{
+	Some amphibian species have a distinctive belly patterns, which are wildy used for photo identification in ecology studies. There exist several semi-automatic systems for comparison of such patterns, but they requrire fairly constrained environments. In this report we describe using deep neural networks to first determine the identity of a photographed individual in a closed set and then modify the network and matching process for identification on an open datset. With the chosen network architecture, we explore different techniques used to prevent overfitting and approaches to extraction of the feature vector describing the individual. Using a relativity small dataset, we also describe challenges in the process of splitting the dataset, while ensuring reliable training and evaluation.
+}
+
 %----------------------------------------------------------------------------------------
 
 \begin{document}
@@ -159,8 +163,7 @@ Another problem caused partially by small dataset is overfitting. First measure 
 		Saturation scaling & 40\%         \\
 		Hue rotation       & 4\%          \\
 		Rotation           & $\pm20\deg$  \\
-		Translation        & $\pm10\%$    \\
-		Scaling            & $\pm10\%$    \\
+		Translation \& scaling       & $\pm10\%$    \\
 		Sheer              & $\pm5\%$     \\
 		\bottomrule
 	\end{tabular}
@@ -175,9 +178,9 @@ Another problem caused partially by small dataset is overfitting. First measure 
 
 To make the problem with small dataset even worse we also need a subset of images to test identification. Individuals in this subset must not appear in train subset, to reflect the open dataset problem we are trying to solve. We handpicked classes with exactly two images, with intention not to disturb classes with many images, which we suspect are most useful in the learning phase. We have named the new subset \textit{ident}.
 
-\newpage
 Due to uncertainty of the many decisions regarding the dataset we have experimented and trained 4 different DNN:
 \begin{description}
+	\itemsep0em
 	\item[Net 1] Only \textit{train} and \textit{test} subsets. Goal is to set benchmark for other networks. Cannot be objectivity used to evaluate identification.
 	\item[Net 2] \textit{Train}, \textit{test} and \textit{ident} subsets. First try at identification. 
 	\item[Net 3] Removed all classes with only one case. This reduced number of images by 67, but brought number of images per class from $2.3$ to $3.1$. Because all images were in train subset, we have moved some images from test and indent to the train subset.
@@ -256,12 +259,10 @@ With most efficient combination of overfitting prevention, our models finished l
 	\label{fig:classification-results}
 \end{figure}
 
-\newpage
 \subsection*{Feature extraction}
 
 As we described, our intention is to remove the last or last few layers of the network and obtain outputs of previous layers to be used as a feature vector. But chosen architecture of our network is not very convenient for such procedures, since it has only one fully connected layer, which maps from previous convolutional layer to the output of the network (i.e. activation of our classes). If we were to take output of convolutional layer, feature vector would contain $110.592$ entries, which is much more that expected for a feature vector.
 
-\newpage
 
 We had three options:
 \begin{enumerate}

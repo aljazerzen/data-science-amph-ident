@@ -233,15 +233,30 @@ justification=raggedright]{caption}
 \twocolumn[{%
 \thispagestyle{empty}%
 {\raggedleft\small\sffamily\bfseries\@JournalInfo\\\@Archive\par}%
-\vskip64pt%
+\vskip10pt%
 {\raggedright\color{color1}\fontfamily{cmss}\fontseries{bc}\fontshape{n}\fontsize{20}{25}\selectfont \@PaperTitle\par}%
 \vskip10pt%
 {\raggedright\color{color1}\sffamily\fontsize{12}{16}\selectfont  \@Authors\par}%
 \vskip8pt%
+\fcolorbox{color1}{white}{%
+\parbox{\textwidth-2\fboxsep-2\fboxrule}{\centering%
+\colorbox{color2!50}{%
+\parbox{\textwidth-4\fboxsep-2\fboxrule}{%
+\ifx\@Keywords\@empty%
+\sffamily\textbf{\abstractname}\\[4pt]\@Abstract%
+\else%
+\sffamily\textbf{\abstractname}\\[4pt]\@Abstract\\[4pt]%
+\textbf{\keywordname}\\\@Keywords%
+\fi%
+}%
+}%
+\vskip4pt%
 \begingroup%
 \raggedright\sffamily\small%
 \footnotesize\@affiliation\par%
 \endgroup%%
+}%
+}%
 \vskip10pt%
 }]%
 }
