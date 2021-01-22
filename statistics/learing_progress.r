@@ -3,7 +3,7 @@ library(data.table)
 library(ggplot2)
 library(magrittr)
 
-setwd("../net2")
+setwd("../net4")
 
 loss <- fread("loss.csv")
 loss[, time := 1:.N]
@@ -19,7 +19,7 @@ ggplot(loss, aes(x = time, y = loss_mean)) +
   geom_vline(xintercept = which(loss_resets), alpha = 0.2) +
   ylim(-2, 5) + xlim(0, max(loss$time))
 
-ggsave("loss.pdf", width = 21)
+ggsave("loss.pdf", width = 15, height = 6)
 
 # ----------
 
@@ -50,4 +50,4 @@ rank_freqs %>%
   annotate("text", x = rank_resets$time * 5, y = 0.1,
     label = rank_resets$label, angle = 20)
 
-ggsave("learning-progress-ranks.pdf", width = 8, height = 2.5)
+ggsave("learning-progress-ranks.pdf", width = 15, height = 6)
